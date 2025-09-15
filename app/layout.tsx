@@ -1,4 +1,5 @@
 import { Poppins } from 'next/font/google';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import React from 'react';
 
 import './globals.css';
@@ -21,7 +22,9 @@ export default function RootLayout({ children }: LayoutProps) {
 
         <ThemeProvider attribute="class" defaultTheme="light">
           <div className="flex">
-            <div className="flex flex-1 flex-col">{children}</div>
+            <div className="flex flex-1 flex-col">
+              <NuqsAdapter>{children}</NuqsAdapter>
+            </div>
           </div>
         </ThemeProvider>
       </body>
