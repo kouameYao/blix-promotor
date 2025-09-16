@@ -3,12 +3,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { paths } from '@/routes';
 
 import { LeftSide } from './left-side';
 
@@ -17,13 +20,6 @@ const loginSchema = z.object({
   password: z
     .string()
     .min(8, 'Le mot de passe doit contenir au moins 8 caractères')
-    .regex(/[A-Z]/, 'Le mot de passe doit contenir au moins une majuscule')
-    .regex(/[a-z]/, 'Le mot de passe doit contenir au moins une minuscule')
-    .regex(/[0-9]/, 'Le mot de passe doit contenir au moins un chiffre')
-    .regex(
-      /[^A-Za-z0-9]/,
-      'Le mot de passe doit contenir au moins un caractère spécial'
-    )
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -31,6 +27,7 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -42,9 +39,27 @@ export function LoginForm() {
 
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log('Login data:', data);
+
+    // Appel à signIn avec le provider "merchant"
+    const result = await signIn('promotor', {
+      redirect: false, // On gère la redirection manuellement
+      email: data.email, // ou data.username selon ton formulaire
+      password: data.password
+    });
+
     setIsLoading(false);
+
+    if (result?.error) {
+      // Afficher une erreur si login échoue
+      console.error('Login failed:', result.error);
+      // tu peux mettre un state pour afficher un message à l'utilisateur
+    } else {
+      // Login réussi
+      console.log('Login successful!', result);
+      // Redirection si besoin
+
+      router.push(paths.dashboard.root('fr'));
+    }
   };
 
   return (
