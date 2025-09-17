@@ -1,9 +1,23 @@
-import React from 'react';
+import { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 
-export default function Home() {
-  return (
-    <div>
-      <h1>Welcome</h1>
-    </div>
-  );
+import { auth } from '@/auth';
+import { Locale } from '@/i18n.config';
+
+export const metadata: Metadata = {
+  title: 'Home'
+};
+
+export default async function HomePage({
+  params: { lang }
+}: {
+  params: { lang: Locale };
+}) {
+  const session = await auth();
+
+  if (session && session.user) {
+    return redirect('/fr/dashboard');
+  } else {
+    return redirect('/fr/login');
+  }
 }

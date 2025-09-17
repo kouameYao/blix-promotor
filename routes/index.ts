@@ -2,7 +2,7 @@ export const DASHBOARD = '/dashboard';
 
 export const paths = {
   dashboard: {
-    root: DASHBOARD
+    root: (locale: string) => `/${locale}/${DASHBOARD}`
   },
   users: {
     root: `${DASHBOARD}/users`
