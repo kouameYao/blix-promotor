@@ -11,9 +11,7 @@
     "lint": "next lint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,md,mdx,css,yaml,yml}\"",
     "check": "prettier --check \"**/*.{ts,tsx,js,jsx,md,mdx,css,yaml,yml}\"",
-    "commit": "cz",
-    "preinstall": "tsx ./scripts/check-package-manager.ts",
-    "postinstall": "rimraf .next"
+    "commit": "cz"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
