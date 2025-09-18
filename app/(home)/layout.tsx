@@ -1,3 +1,4 @@
+import { Analytics } from '@vercel/analytics/next';
 import { GeistMono } from 'geist/font/mono';
 import { GeistSans } from 'geist/font/sans';
 import type { Metadata } from 'next';
@@ -30,7 +31,10 @@ export default async function RootLayout({
       <body
         className={`font-sans ${GeistSans.variable} ${GeistMono.variable} ${sora.variable}`}
       >
-        <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+        <Suspense fallback={<div>Loading...</div>}>
+          {children}
+          <Analytics />
+        </Suspense>
       </body>
     </html>
   );
