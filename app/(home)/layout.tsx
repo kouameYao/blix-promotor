@@ -5,7 +5,7 @@ import { Sora } from 'next/font/google';
 import type React from 'react';
 import { Suspense } from 'react';
 
-import './globals.css';
+import '../globals.css';
 
 export const metadata: Metadata = {
   title: 'E-Billeterie - Systeme complet de billetterie en ligne',
