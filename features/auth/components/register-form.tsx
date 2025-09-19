@@ -36,7 +36,7 @@ export default function RegisterForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors, isValid }
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema)
   });
@@ -50,12 +50,12 @@ export default function RegisterForm() {
 
   return (
     <div className="min-h-screen flex">
-      <div className="hidden lg:flex lg:w-1/2 bg-yellow-400 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-[#e9e9e9] relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-32 h-32 bg-yellow-300/30 rounded-full"></div>
-          <div className="absolute bottom-32 right-16 w-48 h-48 bg-yellow-300/20 rounded-full"></div>
-          <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-yellow-300/40 rounded-full"></div>
-          <div className="absolute bottom-20 left-1/3 w-16 h-16 bg-yellow-300/50 rounded-full"></div>
+          <div className="absolute top-20 left-20 w-32 h-32 bg-black/30 rounded-full"></div>
+          <div className="absolute bottom-32 right-16 w-48 h-48 bg-black/20 rounded-full"></div>
+          <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-black/40 rounded-full"></div>
+          <div className="absolute bottom-20 left-1/3 w-16 h-16 bg-black/50 rounded-full"></div>
         </div>
 
         <div className="flex items-center justify-center p-12 relative z-10">
@@ -113,16 +113,6 @@ export default function RegisterForm() {
                 Connectez-vous
               </Button>
             </p>
-          </div>
-
-          {/* Divider */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-gray-50 text-gray-500">Ou</span>
-            </div>
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -187,10 +177,10 @@ export default function RegisterForm() {
 
             <Button
               type="submit"
-              disabled={isLoading}
-              className="w-full h-12 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-medium"
+              disabled={isLoading || !isValid}
+              className="w-full h-12 bg-[#e9e9e9] text-black hover:bg-black transition-all duration-100 hover:text-white font-medium"
             >
-              {isLoading ? 'Connexion...' : 'Créer un compte'}
+              {isLoading ? 'Création...' : 'Créer un compte'}
             </Button>
           </form>
         </div>
