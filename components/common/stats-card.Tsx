@@ -9,7 +9,7 @@ interface StatsCardProps {
   subtitle: string;
 }
 
-export function StatsCard({ title, value, subtitle }: StatsCardProps) {
+export const StatisticsCard = ({ title, value, subtitle }: StatsCardProps) => {
   return (
     <Card className="md:p-6 p-4 bg-[#f8f8f8] md:space-y-8 space-y-4 w-full col-span-3 md:col-span-1 rounded-3xl">
       <CardContent className="p-6">
@@ -22,4 +22,4 @@ export function StatsCard({ title, value, subtitle }: StatsCardProps) {
       </CardContent>
     </Card>
   );
-}
+};
