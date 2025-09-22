@@ -1,7 +1,10 @@
+import { Plus, Percent, Workflow, Play, Send } from 'lucide-react';
 import { redirect } from 'next/navigation';
-import React from 'react';
 
 import { auth } from '@/auth';
+import { ActionButton } from '@/components/common/action-button';
+import { PromotionCard } from '@/components/common/promotion-card';
+import { StatsCard } from '@/components/common/stats-card';
 
 export default async function Dashboard() {
   const session = await auth();
@@ -10,7 +13,49 @@ export default async function Dashboard() {
     redirect('/fr/login');
   }
 
-  console.log('session', session);
+  return (
+    <div className="space-y-8 max-w-5xl mx-auto">
+      {/* Welcome Section */}
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold text-gray-900 text-balance">
+          Bon après-midi Souleymane ! 👋
+        </h1>
+        <p className="text-gray-600">
+          Votre audience est active - partagez quelque chose d'excitant !
+        </p>
+      </div>
 
-  return <div>Dashboard</div>;
+      {/* Action Buttons */}
+      <div className="flex flex-wrap gap-4">
+        <ActionButton icon={Plus} title="Ajouter un produit" />
+        <ActionButton icon={Percent} title="Créer une réduction" />
+        <ActionButton icon={Workflow} title="Créer un workflow" />
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-3 grid-rows-2 md:grid-cols-3 md:grid-rows-1 md:gap-5 gap-2 md:my-10 my-6 chariow-0">
+        <StatsCard title="Ventes totales" value="0 FCFA" subtitle="sfgb" />
+        <StatsCard title="7 derniers jours" value="0 FCFA" subtitle="" />
+        <StatsCard title="Produits" value="1" subtitle="" />
+      </div>
+
+      {/* Promotion Cards */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <PromotionCard
+          icon={<Play className="w-8 h-8 text-gray-600" />}
+          title="Rejoignez-nous sur Youtube"
+          description="Découvrez des vidéos pratiques pour apprendre à utiliser Chariow"
+          buttonText="Accéder maintenant"
+          buttonVariant="default"
+        />
+        <PromotionCard
+          icon={<Send className="w-8 h-8 text-gray-600" />}
+          title="Rejoignez notre Telegram"
+          description="Rejoignez la communauté d'entraide des créateurs Chariow"
+          buttonText="Rejoindre maintenant"
+          buttonVariant="secondary"
+        />
+      </div>
+    </div>
+  );
 }

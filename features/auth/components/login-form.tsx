@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import * as z from 'zod';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -14,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { paths } from '@/routes';
+import { errorClx, successClx } from '@/styles/toast';
 
 const loginSchema = z.object({
   email: z.string().email('Adresse email invalide'),
@@ -41,7 +43,7 @@ export default function LoginForm() {
     setIsLoading(true);
 
     // Appel à signIn avec le provider "merchant"
-    const result = await signIn('promotor', {
+    const result: any = await signIn('promotor', {
       redirect: false, // On gère la redirection manuellement
       email: data.email, // ou data.username selon ton formulaire
       password: data.password
@@ -49,15 +51,14 @@ export default function LoginForm() {
 
     setIsLoading(false);
 
-    if (result?.error) {
-      // Afficher une erreur si login échoue
-      console.error('Login failed:', result.error);
-      // tu peux mettre un state pour afficher un message à l'utilisateur
-    } else {
-      // Login réussi
-      console.log('Login successful!', result);
-      // Redirection si besoin
+    console.log('result', result);
 
+    if (result?.error) {
+      toast.error(result.error, {
+        className: errorClx
+      });
+    } else {
+      toast.success('Connexion réussie !', { className: successClx });
       router.push(paths.dashboard.root('fr'));
     }
   };
