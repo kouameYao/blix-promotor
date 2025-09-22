@@ -1,16 +1,16 @@
 // auth.ts
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import NextAuth from 'next-auth';
+import type { NextAuthConfig } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { decodeToken } from 'react-jwt';
-import type { NextAuthConfig } from 'next-auth';
 
 import { ApiService } from './lib/api-service';
 import { LoginResponse } from './types/login';
 import { IUser } from './types/user';
 
 const NEXTAUTH_URL = process.env.NEXTAUTH_URL_INTERNAL;
-const tenDayInSecond = 24 * 60 * 60;
+const tenDayInSecond = 10 * 24 * 60 * 60;
 
 console.log('NEXTAUTH_URL', NEXTAUTH_URL);
 
@@ -41,8 +41,6 @@ const config = {
           email: email,
           password
         });
-
-        console.log('authResponse', authResponse);
 
         if (authResponse.error) {
           throw new Error(authResponse.message);

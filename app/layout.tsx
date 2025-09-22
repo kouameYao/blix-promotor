@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
 import type React from 'react';
 import { Suspense } from 'react';
+import { Toaster } from 'react-hot-toast';
 
 import './globals.css';
 
@@ -30,6 +31,7 @@ export default async function RootLayout({
         <Suspense fallback={<div>Loading...</div>}>
           {children}
           <Analytics />
+          <Toaster toastOptions={{ duration: 3000 }} />
         </Suspense>
       </body>
     </html>
