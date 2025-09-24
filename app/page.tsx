@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: 'Home'
 };
 
-export default async function HomePage({
+export default async function RootPage({
   params: { lang }
 }: {
   params: { lang: Locale };
