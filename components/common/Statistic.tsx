@@ -3,13 +3,13 @@ import * as React from 'react';
 
 import { Card, CardContent } from '../ui/card';
 
-interface StatsCardProps {
+interface StatisticProps {
   title: string;
   value: string;
   subtitle: string;
 }
 
-export const StatisticsCard = ({ title, value, subtitle }: StatsCardProps) => {
+export const Statistic = ({ title, value, subtitle }: StatisticProps) => {
   return (
     <Card className="md:p-6 p-4 bg-[#f8f8f8] md:space-y-8 space-y-4 w-full col-span-3 md:col-span-1 rounded-3xl">
       <CardContent className="p-6">

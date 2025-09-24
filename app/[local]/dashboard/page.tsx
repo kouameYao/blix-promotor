@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import { auth } from '@/auth';
 import { ActionButton } from '@/components/common/action-button';
 import { PromotionCard } from '@/components/common/promotion-card';
-import { StatisticsCard } from '@/components/common/stats-card';
+import { Statistic } from '@/components/common/Statistic';
 
 export default async function Dashboard() {
   const session = await auth();
@@ -34,9 +34,9 @@ export default async function Dashboard() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-3 grid-rows-2 md:grid-cols-3 md:grid-rows-1 md:gap-5 gap-2 md:my-10 my-6 chariow-0">
-        <StatisticsCard title="Ventes totales" value="0 FCFA" subtitle="sfgb" />
-        <StatisticsCard title="7 derniers jours" value="0 FCFA" subtitle="" />
-        <StatisticsCard title="Produits" value="1" subtitle="" />
+        <Statistic title="Ventes totales" value="0 FCFA" subtitle="" />
+        <Statistic title="7 derniers jours" value="0 FCFA" subtitle="" />
+        <Statistic title="Produits" value="1" subtitle="" />
       </div>
 
       {/* Promotion Cards */}
