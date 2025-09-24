@@ -1,4 +1,4 @@
-import { Plus, Percent, Workflow, Play, Send } from 'lucide-react';
+import { Plus, UserPen, Play, Send, TicketPlus } from 'lucide-react';
 import { redirect } from 'next/navigation';
 
 import { auth } from '@/auth';
@@ -27,16 +27,16 @@ export default async function Dashboard() {
 
       {/* Action Buttons */}
       <div className="flex flex-wrap gap-4">
-        <ActionButton icon={Plus} title="Ajouter un produit" />
-        <ActionButton icon={Percent} title="Créer une réduction" />
-        <ActionButton icon={Workflow} title="Créer un workflow" />
+        <ActionButton icon={Plus} title="Ajouter un évenement" />
+        <ActionButton icon={TicketPlus} title="Gérer mes tickets" />
+        <ActionButton icon={UserPen} title="Modifier mon profil" />
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-3 grid-rows-2 md:grid-cols-3 md:grid-rows-1 md:gap-5 gap-2 md:my-10 my-6 chariow-0">
-        <Statistic title="Ventes totales" value="0 FCFA" subtitle="" />
-        <Statistic title="7 derniers jours" value="0 FCFA" subtitle="" />
-        <Statistic title="Produits" value="1" subtitle="" />
+        <Statistic title="Événements en cours" value="2" subtitle="" />
+        <Statistic title="Tickets vendus" value="1800" subtitle="" />
+        <Statistic title="Tickets achetés" value="2908" subtitle="" />
       </div>
 
       {/* Promotion Cards */}

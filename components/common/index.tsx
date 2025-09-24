@@ -1,21 +1,20 @@
 'use client';
 
 import {
-  Home,
-  ShoppingCart,
-  Package,
+  LayoutPanelLeft,
+  Ticket,
+  User,
+  CalendarDays,
+  CalendarCheck,
+  CalendarClock,
+  TicketCheck,
+  Heart,
   Users,
-  DollarSign,
-  BarChart3,
-  Megaphone,
-  Star,
-  Zap,
-  Plus,
+  Bell,
+  Lock,
   Settings,
   HelpCircle,
-  Grid3X3,
-  ChevronDown,
-  ChevronRight
+  Grid3X3
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -34,60 +33,72 @@ import { cn } from '@/lib/utils';
 
 const getNavItems = (lang: string) => [
   {
-    title: 'Accueil',
+    title: 'Tableau de bord',
     url: `/fr/dashboard`,
-    icon: Home,
-    isActive: true
+    icon: LayoutPanelLeft
+  }
+];
+
+const getEventsItems = (lang: string) => [
+  {
+    title: 'Événements à venir',
+    url: `/fr/dashboard/events/upcoming`,
+    icon: CalendarDays
   },
   {
-    title: 'Ventes',
-    url: `/fr/dashboard/ventes`,
-    icon: ShoppingCart
+    title: 'Événements passés',
+    url: `/fr/dashboard/events/past`,
+    icon: CalendarCheck
   },
   {
-    title: 'Produits',
-    url: `/fr/dashboard/produits`,
-    icon: Package
+    title: 'Événements en préparation',
+    url: `/fr/dashboard/events/in-preparation`,
+    icon: CalendarClock
+  }
+];
+
+const getTicketsItems = (lang: string) => [
+  {
+    title: 'Mes tickets en cours',
+    url: `/fr/dashboard/tickets/active`,
+    icon: Ticket
   },
   {
-    title: 'Clients',
-    url: `/fr/dashboard/clients`,
+    title: 'Historique des tickets',
+    url: `/fr/dashboard/tickets/history`,
+    icon: TicketCheck
+  }
+];
+
+const getAccountItems = (lang: string) => [
+  {
+    title: 'Mes événements favoris',
+    url: `/fr/dashboard/account/favorites`,
+    icon: Heart
+  },
+  {
+    title: 'Ma communauté',
+    url: `/fr/dashboard/account/community`,
     icon: Users
   },
   {
-    title: 'Revenus',
-    url: `/fr/dashboard/revenus`,
-    icon: DollarSign
+    title: 'Notifications',
+    url: `/fr/dashboard/account/notifications`,
+    icon: Bell
   },
   {
-    title: 'Analytiques',
-    url: `/fr/dashboard/analytiques`,
-    icon: BarChart3
+    title: 'Profil',
+    url: `/fr/dashboard/account/profile`,
+    icon: User
   },
   {
-    title: 'Marketing',
-    url: `/fr/dashboard/marketing`,
-    icon: Megaphone
-  },
-  {
-    title: 'Avis',
-    url: `/fr/dashboard/avis`,
-    icon: Star
-  },
-  {
-    title: 'Automatisations',
-    url: `/fr/dashboard/automatisations`,
-    icon: Zap
-  },
-  {
-    title: 'Plus',
-    url: `/fr/dashboard/plus`,
-    icon: Plus,
-    hasChevron: true
+    title: 'Mot de passe',
+    url: `/fr/dashboard/account/password`,
+    icon: Lock
   },
   {
     title: 'Paramètres',
-    url: `/fr/dashboard/parametres`,
+    url: `/fr/dashboard/account/settings`,
     icon: Settings
   }
 ];
@@ -95,7 +106,7 @@ const getNavItems = (lang: string) => [
 const getPlusItems = (lang: string) => [
   {
     title: "Centre d'aide",
-    url: `/fr/dashboard/aide`,
+    url: `/fr/dashboard/dashboard/aide`,
     icon: HelpCircle
   }
 ];
@@ -103,6 +114,9 @@ export function AppSidebar({ className }: { className?: string }) {
   const lang = 'fr';
   const items = getNavItems(lang);
   const plusItems = getPlusItems(lang);
+  const eventsItems = getEventsItems(lang);
+  const ticketsItems = getTicketsItems(lang);
+  const accountItems = getAccountItems(lang);
 
   const pathname = usePathname();
 
@@ -114,26 +128,12 @@ export function AppSidebar({ className }: { className?: string }) {
       )}
     >
       <SidebarContent className="bg-[#f8f8f8]">
-        {/* Header */}
-        <div className="p-6 border-b border-gray-100">
-          <div className="flex items-center space-x-2 mb-4">
-            <div className="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">C</span>
+        <div className="p-6">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+              <Grid3X3 className="w-4 h-4 text-white" />
             </div>
             <span className="font-semibold text-gray-900 text-lg">Blix</span>
-            <span className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-500">
-              Blix
-            </span>
-          </div>
-
-          <div className="bg-gray-50 rounded-lg p-3 flex items-center justify-between hover:bg-gray-100 cursor-pointer">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                <Grid3X3 className="w-4 h-4 text-white" />
-              </div>
-              <span className="font-medium text-gray-900">Aller</span>
-            </div>
-            <ChevronDown className="w-4 h-4 text-gray-400" />
           </div>
         </div>
 
@@ -149,7 +149,7 @@ export function AppSidebar({ className }: { className?: string }) {
                     <SidebarMenuButton
                       asChild
                       className={cn(
-                        'rounded-lg mx-2 my-1',
+                        'rounded-sm mx-2 my-1',
                         isActive
                           ? 'bg-yellow-400 text-black hover:bg-yellow-500'
                           : 'hover:bg-gray-50 text-gray-700'
@@ -163,9 +163,6 @@ export function AppSidebar({ className }: { className?: string }) {
                           <item.icon className="w-5 h-5" />
                           <span className="font-medium">{item.title}</span>
                         </div>
-                        {item.hasChevron && (
-                          <ChevronRight className="w-4 h-4 text-gray-400" />
-                        )}
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -175,11 +172,124 @@ export function AppSidebar({ className }: { className?: string }) {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Plus section */}
-        <div className="mt-8 px-3">
+        {/* Event section */}
+        <div>
           <SidebarGroup>
             <SidebarGroupLabel className="text-gray-500 text-sm font-medium px-2 mb-2">
-              Plus
+              Évenements
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {eventsItems.map((item) => {
+                  const isActive = pathname === item.url;
+
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        className={cn(
+                          'rounded-sm mx-2 my-1',
+                          isActive
+                            ? 'bg-yellow-400 text-black hover:bg-yellow-500'
+                            : 'hover:bg-gray-50 text-gray-700'
+                        )}
+                      >
+                        <Link
+                          href={item.url}
+                          className="flex items-center space-x-3 px-3 py-3"
+                        >
+                          <item.icon className="w-5 h-5" />
+                          <span className="font-medium">{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </div>
+
+        {/* ticketsItems section */}
+        <div>
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-gray-500 text-sm font-medium px-2 mb-2">
+              Tickets
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {ticketsItems.map((item) => {
+                  const isActive = pathname === item.url;
+
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        className={cn(
+                          'rounded-sm mx-2 my-1',
+                          isActive
+                            ? 'bg-yellow-400 text-black hover:bg-yellow-500'
+                            : 'hover:bg-gray-50 text-gray-700'
+                        )}
+                      >
+                        <Link
+                          href={item.url}
+                          className="flex items-center space-x-3 px-3 py-3"
+                        >
+                          <item.icon className="w-5 h-5" />
+                          <span className="font-medium">{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </div>
+        {/* accountItems section */}
+        <div>
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-gray-500 text-sm font-medium px-2 mb-2">
+              Profil
+            </SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {accountItems.map((item) => {
+                  const isActive = pathname === item.url;
+
+                  return (
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        asChild
+                        className={cn(
+                          'rounded-sm mx-2 my-1',
+                          isActive
+                            ? 'bg-yellow-400 text-black hover:bg-yellow-500'
+                            : 'hover:bg-gray-50 text-gray-700'
+                        )}
+                      >
+                        <Link
+                          href={item.url}
+                          className="flex items-center space-x-3 px-3 py-3"
+                        >
+                          <item.icon className="w-5 h-5" />
+                          <span className="font-medium">{item.title}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </div>
+
+        {/* Plus section */}
+        <div>
+          <SidebarGroup>
+            <SidebarGroupLabel className="text-gray-500 text-sm font-medium px-2 mb-2">
+              Aide
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
@@ -191,7 +301,7 @@ export function AppSidebar({ className }: { className?: string }) {
                       <SidebarMenuButton
                         asChild
                         className={cn(
-                          'rounded-lg mx-2 my-1',
+                          'rounded-sm mx-2 my-1',
                           isActive
                             ? 'bg-yellow-400 text-black hover:bg-yellow-500'
                             : 'hover:bg-gray-50 text-gray-700'
