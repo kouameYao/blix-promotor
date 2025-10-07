@@ -1,22 +1,24 @@
-// auth.ts
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import NextAuth from 'next-auth';
 import type { NextAuthConfig } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { decodeToken } from 'react-jwt';
 
-import { ApiService } from './lib/api-service';
+import { api } from './lib/api-client';
 import { LoginResponse } from './types/login';
 import { IUser } from './types/user';
 
-const NEXTAUTH_URL = process.env.NEXTAUTH_URL_INTERNAL;
+const NEXTAUTH_URL =
+  process.env.NEXTAUTH_URL_INTERNAL ||
+  process.env.NEXTAUTH_URL ||
+  'http://localhost:3000';
+
+const NEXTAUTH_SECRET =
+  process.env.NEXTAUTH_SECRET || 'fallback-secret-for-development-only';
 const tenDayInSecond = 10 * 24 * 60 * 60;
 
-console.log('NEXTAUTH_URL', NEXTAUTH_URL);
-
-const api = new ApiService(NEXTAUTH_URL || 'http://localhost:3000');
-
 const config = {
+  secret: NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       id: 'promotor',
@@ -34,22 +36,36 @@ const config = {
         if (token) {
           user = decodeToken(token) as IUser;
           user.token = token;
-          return user as any;
+          return user;
         }
 
-        const authResponse = await api.post<LoginResponse, any>('/auth/login', {
-          email: email,
-          password
-        });
+        // Appel API avec le client API universel
+        const authData: LoginResponse = await api.post<LoginResponse>(
+          '/auth/login',
+          {
+            email: email,
+            password
+          }
+        );
 
-        if (authResponse.error) {
-          throw new Error(authResponse.message);
+        console.log('Auth response:', authData);
+
+        // Vérifier si la réponse a une erreur
+        if (authData.error) {
+          console.log('Auth error:', authData.message);
+          throw new Error(authData.message);
         }
 
-        user = decodeToken(authResponse.data.token) as IUser;
-        user.token = authResponse.data.token;
+        // Vérifier si data existe et contient un token
+        if (!authData.data || !authData.data.token) {
+          console.log('No token in response:', authData);
+          throw new Error('Token manquant dans la réponse');
+        }
 
-        return user as any;
+        user = decodeToken(authData.data.token) as IUser;
+        user.token = authData.data.token;
+
+        return user;
       }
     })
   ],
@@ -64,7 +80,12 @@ const config = {
     signIn: '/fr/login'
   },
   callbacks: {
-    async jwt(params: any) {
+    async jwt(params: {
+      trigger?: string;
+      token: any;
+      user?: any;
+      session?: any;
+    }) {
       if (params.trigger === 'update') {
         return { ...params.token, ...params.session.user };
       }
@@ -113,16 +134,17 @@ const config = {
         session.user.sessionTimeOut = token.sessionTimeOut;
         session.user.locked = token.locked;
         session.user.token = token.token;
+
+        console.log('Session callback - token available:', !!token.token);
       }
 
-      // Vérifier expiration du token côté session
       if (token.token) {
         try {
           const decoded = jwt.decode(token.token) as JwtPayload;
           const now = Math.floor(Date.now() / 1000);
           if (decoded?.exp && decoded.exp < now) {
             console.log('Token expired in session');
-            // Retourner null pour forcer la déconnexion
+
             return null;
           }
         } catch (error) {

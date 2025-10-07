@@ -4,9 +4,6 @@ import {
   LayoutPanelLeft,
   Ticket,
   User,
-  CalendarDays,
-  CalendarCheck,
-  CalendarClock,
   TicketCheck,
   Heart,
   Users,
@@ -14,7 +11,8 @@ import {
   Lock,
   Settings,
   HelpCircle,
-  Grid3X3
+  Grid3X3,
+  List
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -41,19 +39,9 @@ const getNavItems = (lang: string) => [
 
 const getEventsItems = (lang: string) => [
   {
-    title: 'Événements à venir',
-    url: `/fr/dashboard/events/upcoming`,
-    icon: CalendarDays
-  },
-  {
-    title: 'Événements passés',
-    url: `/fr/dashboard/events/past`,
-    icon: CalendarCheck
-  },
-  {
-    title: 'Événements en préparation',
-    url: `/fr/dashboard/events/in-preparation`,
-    icon: CalendarClock
+    title: 'Liste',
+    url: `/fr/dashboard/events`,
+    icon: List
   }
 ];
 
@@ -127,7 +115,7 @@ export function AppSidebar({ className }: { className?: string }) {
         className
       )}
     >
-      <SidebarContent className="bg-[#f8f8f8]">
+      <SidebarContent className="bg-gray">
         <div className="p-6">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
