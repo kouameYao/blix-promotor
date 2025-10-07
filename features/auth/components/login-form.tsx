@@ -42,11 +42,10 @@ export default function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
 
-    // Appel à signIn avec le provider "merchant"
     const result: any = await signIn('promotor', {
-      redirect: false, // On gère la redirection manuellement
-      email: data.email, // ou data.username selon ton formulaire
-      password: data.password
+      email: data.email,
+      password: data.password,
+      redirect: false
     });
 
     setIsLoading(false);
@@ -65,12 +64,12 @@ export default function LoginForm() {
 
   return (
     <div className="min-h-screen flex">
-      <div className="hidden lg:flex lg:w-1/2 bg-[#e9e9e9] relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-[#783510] relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-32 h-32 bg-black/30 rounded-full"></div>
-          <div className="absolute bottom-32 right-16 w-48 h-48 bg-black/20 rounded-full"></div>
-          <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-black/40 rounded-full"></div>
-          <div className="absolute bottom-20 left-1/3 w-16 h-16 bg-black/50 rounded-full"></div>
+          <div className="absolute top-20 left-20 w-32 h-32 bg-[#683825] rounded-full"></div>
+          <div className="absolute bottom-32 right-16 w-48 h-48 bg-[#683825] rounded-full"></div>
+          <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-[#683825] rounded-full"></div>
+          <div className="absolute bottom-20 left-1/3 w-16 h-16 bg-[#683825] rounded-full"></div>
         </div>
 
         <div className="flex items-center justify-center p-12 relative z-10">
@@ -143,7 +142,7 @@ export default function LoginForm() {
                   id="email"
                   type="email"
                   placeholder=""
-                  className="pl-10 h-12"
+                  className="pl-10"
                   {...register('email')}
                 />
               </div>
@@ -167,7 +166,7 @@ export default function LoginForm() {
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   placeholder=""
-                  className="pl-10 pr-10 h-12"
+                  className="pl-10 pr-10"
                   {...register('password')}
                 />
                 <button
@@ -192,7 +191,7 @@ export default function LoginForm() {
             <Button
               type="submit"
               disabled={isLoading || !isValid}
-              className="w-full h-12 bg-[#e9e9e9] text-black hover:bg-black transition-all duration-100 hover:text-white font-medium"
+              className="w-full h-12 bg-[#e9e9e9] text-black hover:bg-primary transition-all duration-100 hover:text-[#683825] font-medium"
             >
               {isLoading ? 'Connexion...' : 'Se connecter'}
             </Button>

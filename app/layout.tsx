@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import type React from 'react';
 
 import './globals.css';
+import AppProvider from '@/providers/app-provider';
 
 export const metadata: Metadata = {
   title: 'E-Billeterie - Systeme complet de billetterie en ligne',
@@ -16,7 +17,9 @@ export default async function RootLayout({
 }>) {
   return (
     <html lang="fr">
-      <body>{children}</body>
+      <body>
+        <AppProvider>{children}</AppProvider>
+      </body>
     </html>
   );
 }

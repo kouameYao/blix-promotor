@@ -50,12 +50,12 @@ export default function RegisterForm() {
 
   return (
     <div className="min-h-screen flex">
-      <div className="hidden lg:flex lg:w-1/2 bg-[#e9e9e9] relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-primary relative overflow-hidden">
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-20 w-32 h-32 bg-black/30 rounded-full"></div>
-          <div className="absolute bottom-32 right-16 w-48 h-48 bg-black/20 rounded-full"></div>
-          <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-black/40 rounded-full"></div>
-          <div className="absolute bottom-20 left-1/3 w-16 h-16 bg-black/50 rounded-full"></div>
+          <div className="absolute top-20 left-20 w-32 h-32 bg-[#683825] rounded-full"></div>
+          <div className="absolute bottom-32 right-16 w-48 h-48 bg-[#683825] rounded-full"></div>
+          <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-[#683825] rounded-full"></div>
+          <div className="absolute bottom-20 left-1/3 w-16 h-16 bg-[#683825] rounded-full"></div>
         </div>
 
         <div className="flex items-center justify-center p-12 relative z-10">
@@ -178,7 +178,7 @@ export default function RegisterForm() {
             <Button
               type="submit"
               disabled={isLoading || !isValid}
-              className="w-full h-12 bg-[#e9e9e9] text-black hover:bg-black transition-all duration-100 hover:text-white font-medium"
+              className="w-full h-12 bg-primary text-black hover:bg-black transition-all duration-100 hover:text-white font-medium"
             >
               {isLoading ? 'Création...' : 'Créer un compte'}
             </Button>
