@@ -155,9 +155,9 @@ export default function EventsListPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       {/* Main Content */}
-      <main className="mx-auto max-w-[1400px] px-8">
+      <main className="mx-auto max-w-[1400px] p-8">
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 bg-clip-text text-transparent mb-2">
