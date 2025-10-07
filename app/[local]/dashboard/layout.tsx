@@ -1,14 +1,14 @@
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import { SessionProvider } from 'next-auth/react';
 import type React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
+import { auth } from '@/auth';
 import { AppSidebar } from '@/components/common';
 import { DashboardHeader } from '@/components/common/dashbord-header';
 import { ErrorFallback } from '@/components/common/ErrorFallback';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import { auth } from '@/auth';
-import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'E-Billeterie - Tableau de bord',
