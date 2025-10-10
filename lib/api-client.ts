@@ -12,9 +12,11 @@ export async function callApi<T>(
     'Content-Type': 'application/json'
   };
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+  // Utiliser le proxy Next.js pour éviter les problèmes de CORS
+  const baseUrl =
+    process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '';
 
-  const url = `${baseUrl}${endpoint}`;
+  const url = `${baseUrl}/api-external${endpoint}`;
   console.log('Calling URL:', url);
 
   if (config.token) {
