@@ -119,7 +119,7 @@ export default function EventStatisticsPage({
             <div>
               <p className="text-sm text-gray-600">Revenus générés</p>
               <p className="text-2xl font-bold text-gray-900">
-                {totalRevenue.toLocaleString()} FCFA
+                {totalRevenue?.toLocaleString()} FCFA
               </p>
             </div>
           </div>
@@ -133,7 +133,7 @@ export default function EventStatisticsPage({
             <div>
               <p className="text-sm text-gray-600">Potentiel restant</p>
               <p className="text-2xl font-bold text-gray-900">
-                {potentialRevenue.toLocaleString()} FCFA
+                {potentialRevenue?.toLocaleString()} FCFA
               </p>
             </div>
           </div>

@@ -27,7 +27,7 @@ export const useDeleteCoupon = () => {
 
   return useMutation({
     mutationFn: ({ eventId, couponId }: Omit<DeleteCouponParams, 'token'>) =>
-      deleteCoupon({ eventId, couponId, token }),
+      deleteCoupon({ eventId, couponId, token: token || '' }),
     onSuccess: (_, { eventId }) => {
       toast.success('Coupon supprimé avec succès', {
         className: successClx
@@ -38,9 +38,7 @@ export const useDeleteCoupon = () => {
     },
     onError: (error: ApiError) => {
       const errorMessage =
-        error?.response?.data?.message ||
-        error?.message ||
-        'Erreur lors de la suppression du coupon';
+        error?.message || 'Erreur lors de la suppression du coupon';
       toast.error(errorMessage, {
         className: errorClx
       });
