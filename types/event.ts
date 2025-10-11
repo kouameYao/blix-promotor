@@ -46,5 +46,5 @@ export type TEvent = {
   createdAt: string;
   tarifications: Tarification[];
   categorie: Categorie;
-  statistique: Statistique[];
+  statistique: Statistique;
 };

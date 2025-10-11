@@ -305,7 +305,7 @@ function EventDetailPage({ params }: { params: { id: string } }) {
               <div>
                 <p className="text-sm text-gray-600">Revenus générés</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {totalRevenue.toLocaleString()} FCFA
+                  {totalRevenue?.toLocaleString()} FCFA
                 </p>
               </div>
             </div>
@@ -319,7 +319,7 @@ function EventDetailPage({ params }: { params: { id: string } }) {
               <div>
                 <p className="text-sm text-gray-600">Potentiel restant</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {panierMoyen.toFixed(2)} FCFA
+                  {panierMoyen?.toFixed(2)} FCFA
                 </p>
               </div>
             </div>
@@ -347,7 +347,7 @@ function EventDetailPage({ params }: { params: { id: string } }) {
               <div>
                 <p className="text-sm text-gray-600">Taux de remplissage</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {tauxRemplissage * 100}%
+                  {(tauxRemplissage || 0) * 100}%
                 </p>
               </div>
             </div>

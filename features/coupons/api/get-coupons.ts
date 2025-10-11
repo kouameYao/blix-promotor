@@ -40,7 +40,8 @@ export const useGetCoupons = ({
 
   return useQuery({
     queryKey: [COUPONS_QUERY_KEY, eventId, page, size, sort, token],
-    queryFn: () => getCoupons({ eventId, page, size, sort, token }),
+    queryFn: () =>
+      getCoupons({ eventId, page, size, sort, token: token || '' }),
     enabled: !!token && !!eventId
   });
 };

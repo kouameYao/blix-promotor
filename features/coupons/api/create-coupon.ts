@@ -28,7 +28,7 @@ export const useCreateCoupon = () => {
 
   return useMutation({
     mutationFn: ({ eventId, couponData }: Omit<CreateCouponParams, 'token'>) =>
-      createCoupon({ eventId, couponData, token }),
+      createCoupon({ eventId, couponData, token: token || '' }),
     onSuccess: (_, { eventId }) => {
       toast.success('Coupon créé avec succès', {
         className: successClx
