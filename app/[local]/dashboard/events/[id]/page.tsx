@@ -6,20 +6,20 @@ import {
   MapPin,
   Share2,
   Edit,
-  Eye,
-  CheckCircle2,
   Activity,
   Globe,
-  Phone,
   Mic,
   Ticket,
   Users,
-  DollarSign
+  DollarSign,
+  TrendingUp,
+  Hash,
+  Building2,
+  Phone
 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useGetEvent } from '@/features/events/api/get-event';
@@ -43,33 +43,36 @@ function EventDetailPage({ params }: { params: { id: string } }) {
     const [datePart, timePart] = dateString.split(' ');
     const [day, month, year] = datePart.split('/');
 
-    const options: Intl.DateTimeFormatOptions = {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    };
+    // const options: Intl.DateTimeFormatOptions = {
+    //   weekday: 'long',
+    //   year: 'numeric',
+    //   month: 'long',
+    //   day: 'numeric',
+    //   hour: '2-digit',
+    //   minute: '2-digit'
+    // };
 
-    return new Date(`${year}-${month}-${day}T${timePart}`).toLocaleDateString(
-      'fr-FR',
-      options
-    );
+    // Todo - return in to this format  "11/10/2025 10:00"
+    return `${day}/${month}/${year} ${timePart}`;
+
+    // return new Date(`${year}-${month}-${day}T${timePart}`).toLocaleDateString(
+    //   'fr-FR',
+    //   options
+    // );
   };
 
-  const getStatutColor = (statut: string) => {
-    switch (statut) {
-      case 'PUBLIE':
-        return 'bg-green-500 text-white';
-      case 'BROUILLON':
-        return 'bg-secondary text-white';
-      case 'TERMINE':
-        return 'bg-gray-500 text-white';
-      default:
-        return 'bg-gray-500 text-white';
-    }
-  };
+  // const getStatutColor = (statut: string) => {
+  //   switch (statut) {
+  //     case 'PUBLIE':
+  //       return 'bg-green-500 text-white';
+  //     case 'BROUILLON':
+  //       return 'bg-secondary text-white';
+  //     case 'TERMINE':
+  //       return 'bg-gray-500 text-white';
+  //     default:
+  //       return 'bg-gray-500 text-white';
+  //   }
+  // };
 
   const getStatutLabel = (statut: string) => {
     switch (statut) {
@@ -83,6 +86,11 @@ function EventDetailPage({ params }: { params: { id: string } }) {
         return statut;
     }
   };
+
+  const billetsVendus = eventData?.statistique?.billetsVendus;
+  const totalRevenue = eventData?.statistique?.montantTotal;
+  const panierMoyen = eventData?.statistique?.panierMoyen;
+  const tauxRemplissage = eventData?.statistique?.tauxRemplissage;
 
   if (isLoading) {
     return (
@@ -173,6 +181,8 @@ function EventDetailPage({ params }: { params: { id: string } }) {
     );
   }
 
+  console.log('eventData', eventData);
+
   return (
     <div className="min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -192,10 +202,7 @@ function EventDetailPage({ params }: { params: { id: string } }) {
               <Share2 className="w-4 h-4" />
               Partager
             </Button>
-            <Button variant="outline" size="sm" className="gap-2">
-              <Eye className="w-4 h-4" />
-              Prévisualiser
-            </Button>
+
             <Button
               size="sm"
               className="gap-2 bg-primary hover:bg-primary/90 text-white"
@@ -207,102 +214,201 @@ function EventDetailPage({ params }: { params: { id: string } }) {
         </div>
       </div>
 
-      <div className="relative overflow-hidden rounded-2xl">
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40"></div>
-        <div className="relative">
-          <Image
-            src={eventData.imagePrincipale || '/placeholder.svg'}
-            alt={eventData.description}
-            width={1920}
-            height={600}
-            className="w-full h-[500px] object-cover"
-            priority
-          />
+      <div className="grid grid-cols-2 gap-6">
+        <div className="relative overflow-hidden rounded-2xl">
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/40"></div>
+          <div className="relative">
+            <Image
+              src={
+                eventData.imagePrincipale ||
+                'https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg'
+              }
+              alt={eventData.description}
+              width={1920}
+              height={600}
+              className="w-full h-[500px] object-cover"
+              priority
+            />
 
-          <div className="absolute inset-0 flex items-end p-8">
-            <div className="max-w-4xl">
-              <div className="flex items-center space-x-3 mb-4">
-                <Badge
-                  className={`${getStatutColor(eventData.statut)} px-3 py-1`}
-                >
-                  <span className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></span>
-                  {getStatutLabel(eventData.statut)}
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className="border-secondary/20 text-secondary bg-secondary/10"
-                >
-                  <Mic className="w-3 h-3 mr-1" />
-                  {eventData.categorie.libelle}
-                </Badge>
-                <Badge
-                  variant="outline"
-                  className="border-green-200 text-green-700 bg-green-50"
-                >
-                  <Globe className="w-3 h-3 mr-1" />
-                  {eventData.portee}
-                </Badge>
-              </div>
-
-              <h1 className="text-5xl font-bold text-white mb-4 leading-tight">
-                {eventData.description}
-              </h1>
-
-              {eventData.sousTitre && (
-                <p className="text-xl text-gray-200 mb-6">
-                  {eventData.sousTitre}
-                </p>
-              )}
-
-              <div className="flex items-center space-x-8">
-                <div className="flex items-center space-x-2 text-white">
-                  <MapPin className="w-5 h-5 text-red-400" />
-                  <span className="font-medium">
-                    {eventData.ville} • {eventData.adresse}
-                  </span>
+            {/* <div className="absolute inset-0 flex items-end p-8">
+              <div className="max-w-4xl">
+                <div className="flex items-center space-x-3 mb-4">
+                  <Badge
+                    className={`${getStatutColor(eventData.statut)} px-3 py-1`}
+                  >
+                    <span className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></span>
+                    {getStatutLabel(eventData.statut)}
+                  </Badge>
+                  <Badge
+                    variant="outline"
+                    className="border-secondary/20 text-secondary bg-secondary/10"
+                  >
+                    <Mic className="w-3 h-3 mr-1" />
+                    {eventData.categorie.libelle}
+                  </Badge>
+                  <Badge
+                    variant="outline"
+                    className="border-green-200 text-green-700 bg-green-50"
+                  >
+                    <Globe className="w-3 h-3 mr-1" />
+                    {eventData.portee}
+                  </Badge>
                 </div>
-                <div className="flex items-center space-x-2 text-white">
-                  <Calendar className="w-5 h-5 text-blue-400" />
-                  <span className="font-medium">
-                    {formatDateTime(eventData.dateheureDebut)}
-                  </span>
-                </div>
-                {eventData.tarifications.length > 0 && (
+
+                <h1 className="text-5xl font-bold text-white mb-4 leading-tight">
+                  {eventData.description}
+                </h1>
+
+                {eventData.sousTitre && (
+                  <p className="text-xl text-gray-200 mb-6">
+                    {eventData.sousTitre}
+                  </p>
+                )}
+
+                <div className="flex items-center space-x-8">
                   <div className="flex items-center space-x-2 text-white">
-                    <DollarSign className="w-5 h-5 text-yellow-400" />
-                    <span className="font-bold">
-                      À partir de{' '}
-                      {Math.min(
-                        ...eventData.tarifications.map((t) => t.prix)
-                      ).toLocaleString()}{' '}
-                      FCFA
+                    <MapPin className="w-5 h-5 text-red-400" />
+                    <span className="font-medium">
+                      {eventData.ville} • {eventData.adresse}
                     </span>
                   </div>
-                )}
+                  <div className="flex items-center space-x-2 text-white">
+                    <Calendar className="w-5 h-5 text-blue-400" />
+                    <span className="font-medium">
+                      {formatDateTime(eventData.dateheureDebut)}
+                    </span>
+                  </div>
+                  {eventData.tarifications.length > 0 && (
+                    <div className="flex items-center space-x-2 text-white">
+                      <DollarSign className="w-5 h-5 text-yellow-400" />
+                      <span className="font-bold">
+                        À partir de{' '}
+                        {Math.min(
+                          ...eventData.tarifications.map((t) => t.prix)
+                        ).toLocaleString()}{' '}
+                        FCFA
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div> */}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="p-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+                <DollarSign className="w-6 h-6 text-yellow-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Revenus générés</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {totalRevenue.toLocaleString()} FCFA
+                </p>
               </div>
             </div>
-          </div>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-purple-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Potentiel restant</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {panierMoyen.toFixed(2)} FCFA
+                </p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                <Users className="w-6 h-6 text-blue-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Participants</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {billetsVendus}
+                </p>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                <Ticket className="w-6 h-6 text-green-600" />
+              </div>
+              <div>
+                <p className="text-sm text-gray-600">Taux de remplissage</p>
+                <p className="text-2xl font-bold text-gray-900">
+                  {tauxRemplissage * 100}%
+                </p>
+              </div>
+            </div>
+          </Card>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
-            <Card className="bg-white border-0">
-              <div className="p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  À propos de l'événement
-                </h2>
+            <Card className="p-5">
+              <h2 className="text-lg font-semibold mb-4">
+                Répartition par type de ticket
+              </h2>
+              <div className="space-y-4">
+                {eventData.tarifications.map((ticket) => {
+                  const sold = ticket.qteTotale - ticket.qteRestante;
+                  const percentage = (sold / ticket.qteTotale) * 100;
 
-                <p className="text-gray-700 leading-relaxed">
-                  {eventData.description}
-                </p>
+                  return (
+                    <div key={ticket.id} className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                            <span className="text-white text-sm font-bold">
+                              {ticket.libelle.charAt(0)}
+                            </span>
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-900">
+                              {ticket.libelle}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              {ticket.prix.toLocaleString()} FCFA
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-sm text-gray-600">
+                            {sold} / {ticket.qteTotale} vendus
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {percentage.toFixed(1)}%
+                          </p>
+                        </div>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div
+                          className="bg-gradient-to-r from-primary to-primary/80 h-2 rounded-full transition-all duration-300"
+                          style={{ width: `${percentage}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </Card>
 
             <Card className="bg-white border-0">
-              <div className="p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+              <div className="p-5">
+                <h2 className="text-lg font-bold text-gray-900 mb-6 flex items-center">
                   <Activity className="w-6 h-6 mr-3 text-primary" />
                   Informations détaillées
                 </h2>
@@ -321,7 +427,7 @@ function EventDetailPage({ params }: { params: { id: string } }) {
                   </div>
 
                   <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-secondary/10 rounded-xl flex items-center justify-center">
+                    <div className="w-12 h-12 bg-[#6b7280] rounded-xl flex items-center justify-center">
                       <MapPin className="w-6 h-6 text-secondary" />
                     </div>
                     <div>
@@ -355,148 +461,71 @@ function EventDetailPage({ params }: { params: { id: string } }) {
                       </p>
                     </div>
                   </div>
+
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                      <Hash className="w-6 h-6 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Code événement</p>
+                      <p className="font-semibold text-gray-900">
+                        {eventData.code}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
+                      <Activity className="w-6 h-6 text-orange-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Statut</p>
+                      <p className="font-semibold text-gray-900">
+                        {getStatutLabel(eventData.statut)}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+                      <Building2 className="w-6 h-6 text-indigo-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Type de lieu</p>
+                      <p className="font-semibold text-gray-900">PRESENTIEL</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center">
+                      <Phone className="w-6 h-6 text-pink-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">
+                        <span className="text-gray-700">Contact</span>
+                      </p>
+                      <p className="font-semibold text-gray-900">
+                        <span className="text-gray-700">
+                          {eventData.infoline}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </Card>
           </div>
 
           <div className="space-y-8">
-            <Card className="bg-primary text-white border-0">
-              <div className="p-6">
-                <h3 className="text-xl font-bold mb-6 flex items-center">
-                  <CheckCircle2 className="w-6 h-6 mr-2" />
-                  Informations de l'événement
-                </h3>
-
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm opacity-80">Code événement</p>
-                    <p className="text-lg font-mono font-bold">
-                      {eventData.code}
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="text-sm opacity-80">Statut</p>
-                    <Badge className="bg-white/20 text-white border-white/30">
-                      {getStatutLabel(eventData.statut)}
-                    </Badge>
-                  </div>
-
-                  <div>
-                    <p className="text-sm opacity-80">Type de lieu</p>
-                    <p className="text-sm">PRESENTIEL</p>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
             <Card className="bg-white border-0">
-              <div className="p-6">
-                <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                  <Phone className="w-5 h-5 mr-2 text-primary" />
-                  Contact
-                </h3>
-
-                <div className="space-y-3">
-                  <div className="flex items-center space-x-3 text-sm">
-                    <Phone className="w-4 h-4 text-gray-400" />
-                    <span className="text-gray-700">{eventData.infoline}</span>
-                  </div>
-                  <div className="flex items-center space-x-3 text-sm">
-                    <MapPin className="w-4 h-4 text-gray-400" />
-                    <span className="text-gray-700">
-                      {eventData.adresse}, {eventData.ville}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="bg-white border-0">
-              <div className="p-8">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                  <Ticket className="w-6 h-6 mr-3 text-secondary" />
-                  Types de Billets
+              <div className="p-4">
+                <h2 className="text-lg font-bold text-gray-900 mb-6">
+                  À propos de l'événement
                 </h2>
 
-                <div className="grid grid-cols-1 gap-6">
-                  {eventData.tarifications.map((ticket, index) => (
-                    <div
-                      key={ticket.id}
-                      className="p-6 bg-gradient-to-r from-secondary-light/10 to-secondary/10 rounded-xl border border-secondary/20"
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center">
-                            <Ticket className="w-6 h-6 text-white" />
-                          </div>
-                          <div>
-                            <h3 className="text-xl font-bold text-gray-900">
-                              {ticket.libelle}
-                            </h3>
-                            {ticket.description && (
-                              <p className="text-gray-600">
-                                {ticket.description}
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-2xl font-bold text-primary">
-                            {ticket.prix.toLocaleString()} FCFA
-                          </p>
-                          <p className="text-sm text-gray-600">par billet</p>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="flex items-center space-x-2">
-                          <Users className="w-4 h-4 text-secondary" />
-                          <span className="text-sm text-gray-600">
-                            Total disponibles:
-                          </span>
-                          <span className="font-semibold">
-                            {ticket.qteTotale}
-                          </span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <CheckCircle2 className="w-4 h-4 text-green-600" />
-                          <span className="text-sm text-gray-600">
-                            Restants:
-                          </span>
-                          <span className="font-semibold text-green-600">
-                            {ticket.qteRestante}
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="mt-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm text-gray-600">
-                            Disponibilité
-                          </span>
-                          <span className="text-sm font-medium">
-                            {(
-                              ((ticket.qteTotale - ticket.qteRestante) /
-                                ticket.qteTotale) *
-                              100
-                            ).toFixed(0)}
-                            % vendus
-                          </span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div
-                            className="bg-gradient-to-r from-secondary-light to-secondary h-2 rounded-full transition-all duration-300"
-                            style={{
-                              width: `${((ticket.qteTotale - ticket.qteRestante) / ticket.qteTotale) * 100}%`
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <p className="text-gray-700 leading-relaxed text-wrap">
+                  {eventData.description}
+                </p>
               </div>
             </Card>
           </div>

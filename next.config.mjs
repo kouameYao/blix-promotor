@@ -5,7 +5,7 @@ const nextConfig = {
   async rewrites() {
     const apiUrl =
       process.env.NEXT_PUBLIC_API_URL ||
-      'http://54.38.158.40:8080/billeterie-api/api/v1';
+      'http://192.168.100.6:8080/billeterie-api/api/v1';
 
     if (!apiUrl) {
       throw new Error(

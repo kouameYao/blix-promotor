@@ -1,0 +1,303 @@
+---
+alwaysApply: true
+---
+
+# 🧭 PAYNAH-B2C — Règles de Structure du Projet
+
+## 🧱 Niveau Racine
+
+- Le projet utilise **Next.js 14 (App Router)** avec TypeScript, Shadcn UI et Better Auth.
+- Architecture **modulaire basée sur les fonctionnalités** avec séparation claire des responsabilités.
+- Code propre, typé et maintenable avec des imports absolus (`@/components`, `@/hooks`, etc.).
+- Point d'entrée principal : `/app`.
+- **Stack principal** : Next.js 14 + TypeScript + Tailwind CSS v4 + Zustand + Better Auth + React Query + i18n.
+
+---
+
+## 📁 .cursor/rules
+
+> 🧠 Configuration du Comportement IA  
+> Contient les règles IA pour guider la génération de code, le refactoring et les explications.  
+> **Importance élevée** — définit comment l'IA doit se comporter dans le codebase.
+
+---
+
+## 📁 .husky
+
+> ⚙️ Git Hooks  
+> Automatise les tâches pre-commit et pre-push (linting, vérifications de types).  
+> **Importance faible** pour la génération de code IA, mais ne jamais supprimer ou modifier sauf ajout de hooks.
+
+---
+
+## 📁 app
+
+> 🧩 Répertoire Next.js App Router  
+> Contient toutes les routes et layouts pour le frontend.  
+> **Importance très élevée** — base de tout le routage et rendu UI.
+
+### `/app/layout.tsx`
+
+- Layout global (s'applique à toutes les pages).
+- Encapsule les providers, styles globaux et métadonnées.
+- **CRITIQUE** : Ne jamais supprimer les providers existants sans instruction explicite.
+
+### `/app/globals.css`
+
+- Styles Tailwind globaux et resets.
+- Utilisé dans toute l'application.
+- Contient la configuration de la police Aeonik.
+
+### `/app/[local]/(public)`
+
+- Pages publiques spécifiques à la locale (login, register, kyc-docs, etc.).
+- Structure peut différer selon la langue ou région.
+- **Pattern** : Utiliser les composants de `features/auth/components` pour la logique.
+
+### `/app/[local]/dashboard`
+
+- Routes pour utilisateurs authentifiés.
+- Doit importer les composants de `features/dashboard` pour la logique et `components/` pour l'UI.
+- **Important** : éviter la logique lourde directement dans les pages — déléguer aux `features`.
+
+---
+
+## 📁 components
+
+> 🎨 Composants UI réutilisables  
+> Composants visuels basés sur Shadcn ou personnalisés partagés entre fonctionnalités.  
+> Exemples : `Button`, `Card`, `Modal`, `DataTable`, `StepperCard`.  
+> **Importance élevée** pour la cohérence UI.
+
+### Structure attendue :
+
+- `ui/` → Composants Shadcn de base
+- `common/` → Composants communs (stepper-card, etc.)
+- `shared/` → Composants partagés
+- `react-hook-form/` → Composants de formulaires
+
+---
+
+## 📁 constants
+
+> 📚 Valeurs de configuration statiques  
+> Inclut les enums, constantes système et labels app-wide.  
+> Ne doit pas contenir de logique — seulement des valeurs exportées.
+
+---
+
+## 📁 features
+
+> 🧩 Fonctionnalités spécifiques au domaine  
+> Chaque dossier = une zone fonctionnelle (ex. `auth`, `dashboard`, `missions`, etc.).  
+> Encapsule ses propres :
+
+- `components` → UI spécifique à la fonctionnalité
+- `api` → logique d'accès aux données
+- `constants` → constantes locales
+- `types` → types au niveau fonctionnalité (voir ci-dessous)
+- `utils` → fonctions utilitaires
+
+**Importance très élevée** — la logique métier principale vit ici.
+
+### 🧾 Règles des Types au Niveau Fonctionnalité
+
+- Chaque fonctionnalité doit contenir un dossier `types/` si elle définit des **types, interfaces ou enums** utilisés uniquement dans cette fonctionnalité.
+- Les types locaux **ne doivent pas être déclarés globalement**.
+- Règle d'ordre d'import :
+  - Utiliser les types locaux depuis `@/features/[feature]/types`.
+  - Utiliser les types partagés/globaux depuis `@/types`.
+
+### Exemple de structure auth :
+
+```
+features/auth/
+├── components/     # LoginFlow, PhoneLoginForm, etc.
+├── api/           # login.ts, etc.
+├── types/         # auth.ts avec LoginCredentials, etc.
+├── utils/         # schema.ts avec validation Zod
+└── constants/     # index.ts
+```
+
+---
+
+## 📁 hooks
+
+> 🪝 Hooks React personnalisés globaux  
+> Logique réutilisable cross-fonctionnalité (ex. `useAuth`, `useDebounce`, `useModal`).  
+> **Importance élevée** pour le comportement de l'app et l'interactivité.
+
+### Hooks existants :
+
+- `use-auth.ts` → Authentification
+- `use-api.ts` → Appels API
+- `use-mobile.tsx` → Détection mobile
+- `use-query-params.ts` → Gestion état URL avec nuqs
+
+---
+
+## 📁 lib
+
+> 🧠 Utilitaires et bibliothèques core  
+> Logique partagée (ex. clients API, authentification, formatage, analytics).  
+> Doit être agnostique au framework.  
+> **Importance élevée** pour la communication backend et intégrations.
+
+### Fichiers clés :
+
+- `auth.ts` → Configuration Better Auth
+- `api-client.ts` → Client API
+- `react-query.ts` → Configuration React Query
+- `utils.ts` → Utilitaires généraux
+
+---
+
+## 📁 locales
+
+> 🌍 Traductions i18n  
+> Contient les fichiers JSON de traduction et config langue.  
+> **Importance moyenne**, mais critique pour le support multi-langue.
+
+### Structure :
+
+- `en.ts` / `fr.ts` → Traductions par langue
+- `client.ts` / `server.ts` → Hooks i18n
+- `types.ts` → Types de traduction
+
+---
+
+## 📁 providers
+
+> 🧩 Providers de contexte globaux  
+> Contient les wrappers de contexte pour Theme, Auth, QueryClient, etc.  
+> Utilisé dans `/app/layout.tsx` pour initialiser le contexte.  
+> **Importance élevée** — modifie le comportement au niveau app.
+
+### Providers existants :
+
+- `auth-provider.tsx` → Better Auth
+- `react-query-provider.tsx` → TanStack Query
+- `nuqs-provider.tsx` → Gestion état URL
+- `steps-provider.tsx` → Gestion des étapes
+
+---
+
+## 📁 routes
+
+> 🗺️ Routes programmatiques  
+> Définitions de routes centralisées, redirections et guards.  
+> **Importance moyenne-élevée**, améliore la maintenabilité.
+
+---
+
+## 📁 store
+
+> ⚡ Stores Zustand  
+> Gestion d'état globale.  
+> Chaque store gère un domaine (auth, UI, credits, etc.).  
+> **Importance très élevée** pour la logique UI basée sur l'état.
+
+### Stores existants :
+
+- `auth-store.ts` → Authentification avec persistence
+- `ui-store.ts` → État UI (sidebar, theme)
+- `steps-store.ts` → Gestion des étapes de processus
+
+---
+
+## 📁 styles
+
+> 🎨 Configuration du thème  
+> Contient la config Tailwind, variables, animations et SCSS global si nécessaire.  
+> **Importance moyenne**, définit la cohérence du design.
+
+### Configuration spécifique :
+
+- Police Aeonik configurée
+- Couleurs personnalisées (black, yellow, gray-50, etc.)
+- Animations personnalisées (accordion, blink, caret-blink)
+
+---
+
+## 📁 types
+
+> 🔤 Définitions TypeScript globales  
+> Contient les **types partagés ou cross-fonctionnalité**.  
+> Règles :
+
+- Déclarer seulement les **types utilisés dans plusieurs fonctionnalités**.
+- Ne jamais déclarer de types spécifiques à une fonctionnalité ici.
+- Exemples : `User`, `Mission`, `SubscriptionPlan`, `Organization`.
+
+**Importance élevée**, assure la sécurité des types dans l'app.
+
+---
+
+## 📁 utils
+
+> 🧰 Fonctions utilitaires  
+> Fonctions pures génériques (formatage, validation, parsing).  
+> **Importance moyenne-élevée** — souvent utilisées par `features` et `lib`.
+
+---
+
+## ⚙️ Autres Fichiers
+
+### `.env.example`
+
+Exemples de variables d'environnement.  
+Ne jamais commiter `.env` avec des secrets.
+
+### `.editorconfig`
+
+Règles de formatage et indentation (garder cohérent).
+
+### `.vscode`
+
+Paramètres spécifiques au workspace (extensions, formatage).  
+**Importance faible IA**, ne pas modifier automatiquement.
+
+---
+
+# 🧩 Résumé des Directives IA
+
+1. **Ne pas mélanger UI et logique.**  
+   → UI dans `components`, logique dans `features`, config globale dans `lib`.
+
+2. **Respecter les frontières des dossiers.**  
+   → Le code `features/auth` ne doit pas dépendre de `features/dashboard`.
+
+3. **Toujours utiliser les imports absolus (`@/…`)** au lieu de relatifs.
+
+4. **Ne jamais supprimer les providers ou layout wrappers** sauf instruction explicite.
+
+5. **Préserver la structure des stores Zustand** et conventions de nommage.
+
+6. **Types Globaux vs Locaux**
+   - Types globaux → `/types`
+   - Types locaux (feature-scoped) → `/features/[feature]/types`
+   - Ne jamais mélanger les deux.
+
+7. **Pour nouvelles fonctionnalités**, répliquer la structure dans `/features/[feature-name]/`.
+
+8. **Respecter les patterns existants** :
+   - Utiliser React Hook Form + Zod pour les formulaires
+   - Utiliser Zustand pour l'état global
+   - Utiliser Better Auth pour l'authentification
+   - Utiliser TanStack Query pour les données serveur
+   - Utiliser nuqs pour l'état URL
+
+9. **Respecter la configuration Tailwind** :
+   - Police Aeonik par défaut
+   - Couleurs personnalisées du projet
+   - Animations définies dans la config
+
+10. **Respecter l'internationalisation** :
+    - Utiliser les hooks `useI18n` pour les traductions
+    - Suivre la structure `[local]` dans les routes
+    - Maintenir la cohérence des clés de traduction
+
+---
+
+> 🧠 Cette structure assure clarté, modularité et scalabilité pour PAYNAH-B2C.  
+> Cursor doit toujours respecter ces priorités lors de la génération ou modification de code.

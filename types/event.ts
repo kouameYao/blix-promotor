@@ -13,6 +13,17 @@ export type Categorie = {
   description: string;
   active: boolean;
 };
+
+export type Statistique = {
+  evenementId: string;
+  libelle: string;
+  billetsVendus: number;
+  montantTotal: number;
+  acheteursUniques: number;
+  panierMoyen: number;
+  tauxRemplissage: number;
+};
+
 export type TEvent = {
   id: string;
   code: string;
@@ -35,4 +46,5 @@ export type TEvent = {
   createdAt: string;
   tarifications: Tarification[];
   categorie: Categorie;
+  statistique: Statistique[];
 };

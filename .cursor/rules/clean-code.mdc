@@ -1,0 +1,122 @@
+---
+alwaysApply: true
+---
+
+---
+
+description: Guidelines for writing clean, maintainable, and human-readable code. Apply these rules when writing or reviewing code to ensure consistency and quality.
+globs:
+
+---
+
+# Clean Code Guidelines
+
+## Constants Over Magic Numbers
+
+- Replace hard-coded values with named constants
+- Use descriptive constant names that explain the value's purpose
+- Keep constants at the top of the file or in a dedicated constants file
+
+## Meaningful Names
+
+- Variables, functions, and classes should reveal their purpose
+- Names should explain why something exists and how it's used
+- Avoid abbreviations unless they're universally understood
+
+## Smart Comments
+
+- Don't comment on what the code does — make the code self-documenting
+- Use comments to explain why something is done a certain way
+- Document APIs, complex algorithms, and non-obvious side effects
+
+## Single Responsibility
+
+- Each function should do exactly one thing
+- Functions should be small and focused
+- If a function needs a comment to explain what it does, it should be split
+
+## DRY (Don't Repeat Yourself)
+
+- Extract repeated code into reusable functions
+- Share common logic through proper abstraction
+- Maintain single sources of truth
+
+## Clean Structure
+
+- Keep related code together
+- Organize code in a logical hierarchy
+- Use consistent file and folder naming conventions
+
+## Encapsulation
+
+- Hide implementation details
+- Expose clear interfaces
+- Move nested conditionals into well-named functions
+
+## Code Quality Maintenance
+
+- Refactor continuously
+- Fix technical debt early
+- Leave code cleaner than you found it
+
+## Testing
+
+- Write tests before fixing bugs
+- Keep tests readable and maintainable
+- Test edge cases and error conditions
+
+## Version Control
+
+- Write clear commit messages
+- Make small, focused commits
+- Use meaningful branch names
+
+## Types and Constants Organization
+
+- **Types**
+  - If types are specific to a single file or component, define them at the top of that file.
+  - If types are shared across multiple files in a module, place them in a local `types.ts` file within that module.
+  - If types are used globally throughout the application, store them in the `@/types/` directory at the root of the project.
+
+- **Constants**
+  - If constants are only relevant to a single feature or module, define them in a local `constants.ts` file within that module.
+  - If constants are shared across multiple modules or used globally, store them in the `@/constants/` directory at the root of the project.
+  - Use clear and descriptive names (e.g., `MAX_RETRY_COUNT`, `DEFAULT_LANGUAGE`) and group related constants logically.
+
+## Form Management (Zod + React Hook Form)
+
+- Always manage form state and validation using **React Hook Form** (`react-hook-form`) and **Zod** for schema-based validation.
+- Define validation schemas with `zod` and infer types using `z.infer<typeof schema>` for type safety.
+- Use the **Form** component pattern (e.g., `<Form>`, `<FormField>`, `<FormItem>`, `<FormMessage>`) for consistency across the app.
+- Use reusable form inputs such as `<Input>`, `<Select>`, `<Textarea>`, `<Checkbox>`, and `<RadioGroup>` from your UI library.
+- Keep form field definitions declarative and group related fields logically.
+- Handle submission asynchronously and display clear success or error states.
+- Example pattern:
+
+  ```tsx
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: { name: '', email: '' }
+  });
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Your name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit">Submit</Button>
+      </form>
+    </Form>
+  );
+  ```
