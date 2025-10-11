@@ -5,9 +5,11 @@ import type React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 import { auth } from '@/auth';
-import { AppSidebar } from '@/components/common';
 import { DashboardHeader } from '@/components/common/dashbord-header';
 import { ErrorFallback } from '@/components/common/ErrorFallback';
+import { DynamicContentWrapper } from '@/components/navigation/dynamic-content-wrapper';
+import { MainSidebar } from '@/components/navigation/main-sidebar';
+import { NavigationManager } from '@/components/navigation/navigation-manager';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
 export const metadata: Metadata = {
@@ -35,15 +37,19 @@ export default async function DashboardLayout({
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <SessionProvider>
             <SidebarProvider>
-              <main className="flex min-h-screen  flex-grow">
-                <AppSidebar className="fixed hidden xl:block" />
-                <div className="flex w-full flex-col xl:ms-[270px] xl:w-[calc(100%-270px)] 2xl:ms-72 2xl:w-[calc(100%-288px)]">
-                  <DashboardHeader />
-                  <div className="flex-1 overflow-y-auto bg-gray-100 px-4 @container md:px-8 py-2 lg:px-[50px] lg:py-6 2xl:px-[70px] 3xl:px-16 3xl:py-10">
-                    {children}
+              <NavigationManager>
+                <main className="flex min-h-screen flex-grow">
+                  <MainSidebar className="fixed hidden xl:block" />
+                  <div className="flex w-full flex-col">
+                    <DashboardHeader />
+                    <DynamicContentWrapper>
+                      <div className="flex-1 overflow-y-auto bg-gray-100 px-4 @container md:px-8 py-2 lg:px-[50px] lg:py-6 2xl:px-[70px] 3xl:px-16 3xl:py-10">
+                        {children}
+                      </div>
+                    </DynamicContentWrapper>
                   </div>
-                </div>
-              </main>
+                </main>
+              </NavigationManager>
             </SidebarProvider>
           </SessionProvider>
         </ErrorBoundary>

@@ -2,6 +2,11 @@ interface RequestConfig {
   token?: string;
 }
 
+export interface ApiError {
+  message: string;
+  status?: number;
+}
+
 export async function callApi<T>(
   endpoint: string,
   method: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' = 'GET',
@@ -12,7 +17,6 @@ export async function callApi<T>(
     'Content-Type': 'application/json'
   };
 
-  // Utiliser le proxy Next.js pour éviter les problèmes de CORS
   const baseUrl =
     process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '';
 
@@ -36,20 +40,29 @@ export async function callApi<T>(
       body: body ? JSON.stringify(body) : undefined
     });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('API Error:', response.status, errorText);
-      throw new Error(`API Error: ${response.status} - ${errorText}`);
+    const data = await response.json();
+
+    if (data.error) {
+      console.error('API Error:', data.message);
+      const error: ApiError = {
+        message: data.message || 'Une erreur est survenue'
+      };
+      throw error;
     }
 
-    const data = await response.json();
-    console.log('API Response data:', data);
     return data as T;
   } catch (error) {
     console.error('Fetch Error:', error);
-    throw new Error(
-      error instanceof Error ? error.message : 'Une erreur est survenue'
-    );
+
+    if (error && typeof error === 'object' && 'message' in error) {
+      throw error;
+    }
+
+    const apiError: ApiError = {
+      message:
+        error instanceof Error ? error.message : 'Une erreur est survenue'
+    };
+    throw apiError;
   }
 }
 

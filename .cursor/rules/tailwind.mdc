@@ -1,0 +1,286 @@
+---
+alwaysApply: true
+---
+
+description: Règles Tailwind CSS et bonnes pratiques UI pour PAYNAH-B2C
+globs: **/\*.css, **/_.tsx, \*\*/_.jsx, tailwind.config.js, tailwind.config.ts
+
+---
+
+# 🎨 Règles Tailwind CSS pour PAYNAH-B2C
+
+## 🏗️ Configuration du Projet
+
+### Configuration Tailwind v4
+
+- Utiliser la configuration Tailwind CSS v4 avec les plugins appropriés
+- Configurer l'extension de thème correctement avec les couleurs PAYNAH
+- Configurer le système de purge pour optimiser la production
+- Intégrer les plugins nécessaires (@tailwindcss/container-queries, tailwindcss-animate)
+- Configurer les espacements et breakpoints personnalisés
+- Configurer la palette de couleurs spécifique au projet
+
+### Police Aeonik
+
+- **Police principale** : Aeonik (toutes les variantes disponibles)
+- Utiliser `font-sans` pour la police par défaut
+- Variantes disponibles : Thin, Air, Light, Regular, Medium, Bold, Black (+ Italic)
+- Configuration dans `styles/fonts.css` et `app/globals.css`
+
+---
+
+## 🎨 Styling des Composants
+
+### Classes utilitaires vs CSS personnalisé
+
+- Préférer les classes utilitaires Tailwind aux CSS personnalisés
+- Utiliser `@apply` pour grouper les utilitaires liés quand nécessaire
+- Utiliser les utilitaires de design responsive appropriés
+- Implémenter le mode sombre correctement avec les variants
+- Utiliser les variants d'état appropriés (hover, focus, active, disabled)
+- Maintenir la cohérence des styles de composants
+
+### Composants Shadcn/UI
+
+- Utiliser les composants Shadcn/UI comme base
+- Étendre les composants avec les variants CVA (Class Variance Authority)
+- Maintenir la cohérence des variants de composants
+- Implémenter les animations appropriées avec `tailwindcss-animate`
+- Utiliser les utilitaires de transition appropriés
+- Garder l'accessibilité en tête
+
+---
+
+## 📐 Layout
+
+### Flexbox et Grid
+
+- Utiliser efficacement les utilitaires Flexbox et Grid
+- Implémenter le système d'espacement cohérent
+- Utiliser les container queries quand nécessaire
+- Implémenter les breakpoints responsive appropriés
+- Utiliser les utilitaires de padding et margin appropriés
+- Implémenter les utilitaires d'alignement appropriés
+
+### Responsive Design
+
+- Approche mobile-first obligatoire
+- Implémenter les breakpoints : `sm:`, `md:`, `lg:`, `xl:`, `2xl:`
+- Utiliser efficacement les container queries
+- Gérer correctement les différentes tailles d'écran
+- Implémenter la typographie responsive
+- Utiliser l'espacement responsive approprié
+
+---
+
+## 🔤 Typographie
+
+### Système de polices
+
+- Utiliser les utilitaires de taille de police appropriés
+- Implémenter la hauteur de ligne appropriée
+- Utiliser les utilitaires de poids de police appropriés
+- Configurer correctement les polices personnalisées (Aeonik)
+- Utiliser l'alignement de texte approprié
+- Implémenter la décoration de texte appropriée
+
+### Hiérarchie typographique
+
+- Respecter la hiérarchie visuelle avec les tailles appropriées
+- Utiliser les couleurs de texte cohérentes avec le design system
+- Maintenir la lisibilité sur tous les supports
+
+---
+
+## 🎨 Couleurs PAYNAH
+
+### Palette de couleurs spécifique
+
+```css
+/* Couleurs principales PAYNAH */
+black: {
+  DEFAULT: '#000000',
+  light: '#171511'
+}
+gray-50: '#f8f8f8'
+yellow: '#f3b01d'  /* Couleur accent */
+gray-100: '#707070'
+```
+
+### Utilisation des couleurs
+
+- Utiliser la nomenclature sémantique des couleurs
+- Implémenter le contraste de couleurs approprié
+- Utiliser efficacement les utilitaires d'opacité
+- Configurer correctement les couleurs personnalisées
+- Utiliser les utilitaires de dégradé appropriés
+- Implémenter les états hover appropriés
+
+### Couleurs sémantiques
+
+- `text-black` pour le texte principal
+- `text-gray-100` pour le texte secondaire
+- `bg-yellow` pour les éléments d'accent
+- `bg-gray-50` pour les arrière-plans subtils
+
+---
+
+## 🧩 Composants
+
+### Composants StepperCard
+
+- Utiliser les composants `StepperCard` pour les processus multi-étapes
+- Respecter la structure des props définie dans `types.ts`
+- Implémenter la navigation entre étapes correctement
+- Maintenir la cohérence visuelle des étapes
+
+### Composants de formulaires
+
+- Utiliser les composants `react-hook-form` pour les formulaires
+- Intégrer avec Zod pour la validation
+- Maintenir la cohérence des styles de formulaires
+- Implémenter les états d'erreur et de validation appropriés
+
+### Composants d'authentification
+
+- Respecter les patterns définis dans `features/auth/components`
+- Utiliser les composants `LoginFlow`, `PhoneLoginForm`, etc.
+- Maintenir la cohérence avec le design system
+
+---
+
+## 📱 Design Responsive
+
+### Approche Mobile-First
+
+- Commencer par le design mobile
+- Utiliser les breakpoints progressifs
+- Tester sur différentes tailles d'écran
+- Optimiser pour les interactions tactiles
+
+### Breakpoints PAYNAH
+
+- `sm:` - 640px et plus
+- `md:` - 768px et plus
+- `lg:` - 1024px et plus
+- `xl:` - 1280px et plus
+- `2xl:` - 1536px et plus
+
+---
+
+## ⚡ Performance
+
+### Optimisation Tailwind
+
+- Utiliser la configuration de purge appropriée
+- Minimiser le CSS personnalisé
+- Utiliser les stratégies de cache appropriées
+- Implémenter le code splitting approprié
+- Optimiser pour la production
+- Surveiller la taille du bundle
+
+### Bonnes pratiques
+
+- Éviter les classes utilitaires redondantes
+- Utiliser les classes composées quand approprié
+- Optimiser les animations et transitions
+- Minimiser les re-renders avec les classes conditionnelles
+
+---
+
+## 🎭 Animations PAYNAH
+
+### Animations personnalisées
+
+```css
+/* Animations définies dans tailwind.config.js */
+'accordion-down':'accordion-down0.2sease-out''accordion-up':'accordion-up0.2sease-out''caret-blink':'caret-blink1.25sease-outinfinite'blink: 'blink 1s infinite';
+```
+
+### Utilisation des animations
+
+- Utiliser `animate-accordion-down` pour les accordéons
+- Utiliser `animate-caret-blink` pour les curseurs de saisie
+- Utiliser `animate-blink` pour les éléments d'attention
+- Maintenir la cohérence des durées d'animation
+
+---
+
+## ♿ Accessibilité
+
+### Bonnes pratiques d'accessibilité
+
+- Utiliser les couleurs avec un contraste approprié
+- Implémenter les états focus visibles
+- Utiliser les utilitaires d'accessibilité Tailwind
+- Tester avec les lecteurs d'écran
+- Maintenir la navigation au clavier
+- Utiliser les attributs ARIA appropriés
+
+### Contraste des couleurs
+
+- Vérifier le contraste avec les couleurs PAYNAH
+- Utiliser les outils de vérification de contraste
+- Maintenir la lisibilité sur tous les arrière-plans
+
+---
+
+## 🧪 Bonnes Pratiques
+
+### Conventions de nommage
+
+- Utiliser des noms de classes descriptifs
+- Maintenir la cohérence dans la nomenclature
+- Documenter les composants complexes
+- Utiliser les conventions de Tailwind
+
+### Organisation des styles
+
+- Garder les styles organisés par composant
+- Utiliser les fichiers CSS modulaires quand nécessaire
+- Maintenir la séparation entre styles globaux et composants
+- Documenter les styles personnalisés
+
+### Tests et validation
+
+- Tester sur différents navigateurs
+- Valider avec les outils de développement
+- Tester la responsivité
+- Vérifier les performances
+
+---
+
+## 🔧 Outils et Extensions
+
+### Extensions VSCode recommandées
+
+- Tailwind CSS IntelliSense
+- Prettier
+- ESLint
+- Error Lens
+- Path Intellisense
+
+### Configuration VSCode
+
+- Format on save avec Prettier
+- Auto-fix ESLint
+- IntelliSense Tailwind activé
+- Version TypeScript workspace
+
+---
+
+## 📚 Ressources PAYNAH
+
+### Documentation spécifique
+
+- Consulter `tailwind.config.js` pour la configuration complète
+- Référencer `app/globals.css` pour les styles globaux
+- Utiliser `styles/fonts.css` pour la configuration des polices
+- Suivre les patterns dans `components/ui/` pour les composants de base
+
+### Intégration avec le stack
+
+- Utiliser avec Shadcn/UI pour les composants de base
+- Intégrer avec CVA pour les variants de composants
+- Utiliser avec `clsx` et `tailwind-merge` pour la gestion des classes
+- Maintenir la cohérence avec le système de design PAYNAH
