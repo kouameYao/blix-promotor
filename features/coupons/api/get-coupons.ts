@@ -1,9 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import { useSession } from 'next-auth/react';
+'use server';
 
-import { COUPONS_QUERY_KEY } from '@/constants/query-keys';
 import { Coupon } from '@/features/coupons/types/coupon';
-import { api } from '@/lib/api-client';
+import { fetchData } from '@/lib/api';
 import { ApiListResponse } from '@/types/api-response';
 
 interface GetCouponsParams {
@@ -14,34 +12,24 @@ interface GetCouponsParams {
   sort?: string[];
 }
 
-export const getCoupons = async ({
+export async function getCoupons({
   eventId,
-  page,
-  size,
+  page = 0,
+  size = 10,
   sort,
   token
-}: GetCouponsParams): Promise<ApiListResponse<Coupon>> => {
-  const response = await api.get(
-    `/evenements/${eventId}/coupons?page=${page}&size=${size}`,
-    { token }
+}: GetCouponsParams): Promise<ApiListResponse<Coupon>> {
+  const queryParams = new URLSearchParams();
+  queryParams.append('page', page.toString());
+  queryParams.append('size', size.toString());
+  if (sort) sort.forEach((s) => queryParams.append('sort', s));
+
+  const response = await fetchData(
+    `/evenements/${eventId}/coupons?${queryParams.toString()}`,
+    'GET',
+    null,
+    token
   );
 
-  return response as ApiListResponse<Coupon>;
-};
-
-export const useGetCoupons = ({
-  eventId,
-  page,
-  size,
-  sort
-}: Omit<GetCouponsParams, 'token'>) => {
-  const { data: session } = useSession();
-  const token = (session?.user as { token?: string })?.token;
-
-  return useQuery({
-    queryKey: [COUPONS_QUERY_KEY, eventId, page, size, sort, token],
-    queryFn: () =>
-      getCoupons({ eventId, page, size, sort, token: token || '' }),
-    enabled: !!token && !!eventId
-  });
-};
+  return response;
+}

@@ -1,78 +1,53 @@
-'use client';
+import { redirect } from 'next/navigation';
 
-import { Dialog } from '@/components/ui/dialog';
+import { auth } from '@/auth';
+import { getEvent } from '@/features/events/api/get-event';
 import {
-  CouponsTable,
-  CouponForm,
-  CouponDetails,
-  DeleteCouponModal
-} from '@/features/coupons/components';
-import { useCoupons } from '@/features/coupons/hooks/use-coupons';
+  EventDetailErrorState,
+  EventDetailNotFoundState
+} from '@/features/events/components';
 
-export default function CouponsPage() {
-  const {
-    coupons,
-    selectedCoupon,
-    showFormModal,
-    showDetailsModal,
-    showDeleteModal,
-    couponToDelete,
-    isLoading,
-    error,
-    isDeleting,
-    isCreating,
-    handleAddCoupon,
-    handleViewCoupon,
-    handleDeleteCoupon,
-    handleConfirmDelete,
-    handleCancelDelete,
-    handleSaveCoupon,
-    handleCloseFormModal,
-    handleCloseDetailsModal
-  } = useCoupons();
+import EventCouponsClient from './coupons-client';
 
-  const actionHandlers = {
-    onView: handleViewCoupon,
-    onDelete: handleDeleteCoupon
-  };
+interface EventCouponsPageProps {
+  params: { id: string };
+}
 
-  return (
-    <div className="container mx-auto py-6">
-      <CouponsTable
-        coupons={coupons}
-        handlers={actionHandlers}
-        onAddCoupon={handleAddCoupon}
-        isLoading={isLoading}
-        error={error}
+export default async function EventCouponsPage({
+  params
+}: EventCouponsPageProps) {
+  const session = await auth();
+
+  if (!session || !session.user) {
+    return redirect('/fr/login');
+  }
+
+  const token = (session.user as any)?.token;
+
+  if (!token) {
+    return redirect('/fr/login');
+  }
+
+  try {
+    const eventResponse = await getEvent({
+      eventId: params.id,
+      token
+    });
+
+    const eventData = eventResponse?.data;
+
+    if (!eventData) {
+      return <EventDetailNotFoundState onBack={() => window.history.back()} />;
+    }
+
+    return <EventCouponsClient eventId={params.id} user={session.user} />;
+  } catch (error) {
+    console.error('Error fetching event coupons:', error);
+    return (
+      <EventDetailErrorState
+        message="Impossible de charger les coupons de l'événement"
+        onRetry={() => window.location.reload()}
       />
-
-      <Dialog open={showFormModal} onOpenChange={handleCloseFormModal}>
-        <CouponForm
-          onSubmit={handleSaveCoupon}
-          onCancel={handleCloseFormModal}
-          isLoading={isCreating}
-        />
-      </Dialog>
-
-      <Dialog open={showDetailsModal} onOpenChange={handleCloseDetailsModal}>
-        {selectedCoupon && (
-          <CouponDetails
-            coupon={selectedCoupon}
-            onClose={handleCloseDetailsModal}
-          />
-        )}
-      </Dialog>
-
-      <Dialog open={showDeleteModal} onOpenChange={handleCancelDelete}>
-        {couponToDelete && (
-          <DeleteCouponModal
-            couponCode={couponToDelete.code}
-            onConfirm={handleConfirmDelete}
-            onCancel={handleCancelDelete}
-            isDeleting={isDeleting}
-          />
-        )}
-      </Dialog>
-    </div>
-  );
+    );
+  }
 }

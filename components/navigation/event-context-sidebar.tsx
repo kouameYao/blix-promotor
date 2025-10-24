@@ -15,7 +15,7 @@ import {
   SidebarHeader,
   SidebarGroupLabel
 } from '@/components/ui/sidebar';
-import { useGetEvent } from '@/features/events/api/get-event';
+import { useGetEvent } from '@/features/events/hooks/use-events';
 import { cn } from '@/lib/utils';
 import { useSidebarStore } from '@/store/sidebar-store';
 
@@ -54,7 +54,6 @@ export function EventContextSidebar({ className }: { className?: string }) {
   const { contextSidebarOpen, currentEventId, mainSidebarCollapsed } =
     useSidebarStore();
 
-  // Récupérer les informations de l'événement
   const { data: eventResponse } = useGetEvent({
     eventId: currentEventId || ''
   });
@@ -76,18 +75,7 @@ export function EventContextSidebar({ className }: { className?: string }) {
       )}
     >
       <SidebarContent className="bg-gray-50 border-r border-gray-200">
-        {/* Header avec retour */}
         <SidebarHeader className="p-4 border-b border-gray-200">
-          {/* <div className="flex items-center justify-between">
-            <button
-              onClick={exitEventContext}
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-900 transition-colors"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span className="text-sm font-medium">Retour</span>
-            </button>
-          </div> */}
-
           {eventData && (
             <div className="mt-3">
               <h3 className="font-semibold text-gray-900 text-sm truncate">
@@ -100,7 +88,6 @@ export function EventContextSidebar({ className }: { className?: string }) {
           )}
         </SidebarHeader>
 
-        {/* Navigation contextuelle */}
         <SidebarGroup className="px-3 py-2">
           <SidebarGroupLabel className="text-gray-500 text-xs font-medium px-2 mb-2">
             Navigation
