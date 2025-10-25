@@ -2,26 +2,6 @@ const thirtyDaysInSeconds = 60 * 60 * 24 * 30;
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  async rewrites() {
-    const apiUrl =
-      process.env.NEXT_PUBLIC_API_URL ||
-      'http://54.38.158.40:8080/billeterie-api/api/v1';
-
-    if (!apiUrl) {
-      throw new Error(
-        'NEXT_PUBLIC_API_URL environment variable is not defined'
-      );
-    }
-
-    console.log('Setting up API proxy to:', apiUrl);
-
-    return [
-      {
-        source: '/api-external/:path*',
-        destination: `${apiUrl}/:path*`
-      }
-    ];
-  },
   async headers() {
     return [
       {

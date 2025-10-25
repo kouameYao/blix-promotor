@@ -18,9 +18,10 @@ export async function callApi<T>(
   };
 
   const baseUrl =
-    process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '';
+    process.env.NEXT_PUBLIC_API_URL ||
+    'http://54.38.158.40:8080/billeterie-api/api/v1';
 
-  const url = `${baseUrl}/api-external${endpoint}`;
+  const url = `${baseUrl}${endpoint}`;
   console.log('Calling URL:', url);
 
   if (config.token) {

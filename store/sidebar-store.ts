@@ -22,7 +22,7 @@ export const useSidebarStore = create<SidebarState>()(
   persist(
     (set, get) => ({
       // Premier sidebar (principal)
-      mainSidebarCollapsed: true,
+      mainSidebarCollapsed: false,
       setMainSidebarCollapsed: (collapsed: boolean) =>
         set({ mainSidebarCollapsed: collapsed }),
       toggleMainSidebar: () =>

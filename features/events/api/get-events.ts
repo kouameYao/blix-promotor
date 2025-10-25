@@ -1,8 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
-import { useSession } from 'next-auth/react';
+'use server';
 
-import { EVENTS_QUERY_KEY } from '@/constants/query-keys';
-import { api } from '@/lib/api-client';
+import { fetchData } from '@/lib/api';
 import { ApiListResponse } from '@/types/api-response';
 import { TEvent } from '@/types/event';
 
@@ -13,30 +11,18 @@ interface GetEventsParams {
   sort?: string[];
 }
 
-export const getEvents = async ({
+export async function getEvents({
   page,
   size,
   sort,
   token
-}: GetEventsParams): Promise<ApiListResponse<TEvent>> => {
-  const response = await api.get(`/evenements?page=${page}&size=${size}`, {
+}: GetEventsParams): Promise<ApiListResponse<TEvent>> {
+  const response = await fetchData(
+    `/evenements?page=${page}&size=${size}`,
+    'GET',
+    null,
     token
-  });
+  );
 
-  return response as ApiListResponse<TEvent>;
-};
-
-export const useGetEvents = ({
-  page,
-  size,
-  sort
-}: Omit<GetEventsParams, 'token'>) => {
-  const { data: session } = useSession();
-  const token = (session?.user as any)?.token;
-
-  return useQuery({
-    queryKey: [EVENTS_QUERY_KEY, page, size, sort, token],
-    queryFn: () => getEvents({ page, size, sort, token }),
-    enabled: !!token
-  });
-};
+  return response;
+}

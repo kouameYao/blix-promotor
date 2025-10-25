@@ -4,14 +4,9 @@ import type { NextAuthConfig } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { decodeToken } from 'react-jwt';
 
-import { api } from './lib/api-client';
+import { fetchData } from './lib/api';
 import { LoginResponse } from './types/login';
 import { IUser } from './types/user';
-
-const NEXTAUTH_URL =
-  process.env.NEXTAUTH_URL_INTERNAL ||
-  process.env.NEXTAUTH_URL ||
-  'http://localhost:3000';
 
 const NEXTAUTH_SECRET =
   process.env.NEXTAUTH_SECRET || 'fallback-secret-for-development-only';
@@ -19,6 +14,7 @@ const tenDayInSecond = 10 * 24 * 60 * 60;
 
 const config = {
   secret: NEXTAUTH_SECRET,
+  trustHost: true,
   providers: [
     CredentialsProvider({
       id: 'promotor',
@@ -39,31 +35,34 @@ const config = {
           return user;
         }
 
-        // Appel API avec le client API universel
-        const authData: LoginResponse = await api.post<LoginResponse>(
-          '/auth/login',
-          {
-            email: email,
-            password
-          }
-        );
+        const data = {
+          email: email,
+          password: password
+        };
 
-        console.log('Auth response:', authData);
+        console.log('data', data);
+
+        const authResponse = (await fetchData(
+          '/auth/login',
+          'POST',
+          data
+        )) as LoginResponse;
+        console.log('authResponse', authResponse);
 
         // Vérifier si la réponse a une erreur
-        if (authData.error) {
-          console.log('Auth error:', authData.message);
-          throw new Error(authData.message);
+        if (authResponse.error) {
+          console.log('Auth error:', authResponse.message);
+          throw new Error(authResponse.message);
         }
 
         // Vérifier si data existe et contient un token
-        if (!authData.data || !authData.data.token) {
-          console.log('No token in response:', authData);
+        if (!authResponse.data || !authResponse.data.token) {
+          console.log('No token in response:', authResponse);
           throw new Error('Token manquant dans la réponse');
         }
 
-        user = decodeToken(authData.data.token) as IUser;
-        user.token = authData.data.token;
+        user = decodeToken(authResponse.data.token) as IUser;
+        user.token = authResponse.data.token;
 
         return user;
       }
@@ -75,9 +74,6 @@ const config = {
   },
   jwt: {
     maxAge: tenDayInSecond
-  },
-  pages: {
-    signIn: '/fr/login'
   },
   callbacks: {
     async jwt(params: {
@@ -155,8 +151,7 @@ const config = {
 
       return session;
     }
-  },
-  redirectProxyUrl: NEXTAUTH_URL
+  }
 } satisfies NextAuthConfig;
 
 export const {
